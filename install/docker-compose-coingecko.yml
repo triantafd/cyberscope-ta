@@ -1,0 +1,28 @@
+version: '3'
+name: coingecko-app
+
+services:
+  node-app:
+    image: localhost:5000/coingecko-backend:latest
+    container_name: node-app
+    ports:
+      - "3001:3001"
+    networks:
+      - coingecko-ta-network
+
+
+  react-app:
+    image: localhost:5000/coingecko-frontend:latest
+    container_name: react-app
+    ports:
+      - "80:80"
+    volumes:
+    - ./config/nginx/nginx.conf:/etc/nginx/nginx.conf
+    environment:
+      - REACT_APP_NODE_API_URL=http://node-app:3001
+    networks:
+      - coingecko-ta-network
+
+networks:
+  coingecko-ta-network:
+    driver: bridge
